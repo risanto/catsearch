@@ -36,15 +36,19 @@ function App() {
       <main>
         {searchResult?.map((item) => (
           <div key={item.id}>
-            <img
-              src={`https://cdn2.thecatapi.com/images/${item.reference_image_id}.jpg`}
-              alt={item.name}
-              width={500}
-            ></img>
+            {item.reference_image_id ? (
+              <img
+                src={`https://cdn2.thecatapi.com/images/${item.reference_image_id}.jpg`}
+                alt={item.name}
+                height={300}
+              ></img>
+            ) : (
+              <img src={`cat.ico`} alt={item.name} height={300}></img>
+            )}
             <div>Name: {item.name}</div>
-            <div>Weight: {item.weight.metric} kg</div>
-            <div>Lifespan: {item.life_span} years</div>
-            <div>{item.description}</div>
+            {item.weight && <div>Weight: {item.weight.metric} kg</div>}
+            {item.life_span && <div>Lifespan: {item.life_span} years</div>}
+            {item.description && <div>{item.description}</div>}
           </div>
         ))}
       </main>
