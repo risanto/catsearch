@@ -23,7 +23,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
+      <header>
         <p>Cat breeds search</p>
         <input
           autoFocus
@@ -32,8 +32,22 @@ function App() {
           placeholder="Search here..."
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <main>{JSON.stringify(searchResult)}</main>
       </header>
+      <main>
+        {searchResult?.map((item) => (
+          <div key={item.id}>
+            <img
+              src={`https://cdn2.thecatapi.com/images/${item.reference_image_id}.jpg`}
+              alt={item.name}
+              width={500}
+            ></img>
+            <div>Name: {item.name}</div>
+            <div>Weight: {item.weight.metric} kg</div>
+            <div>Lifespan: {item.life_span} years</div>
+            <div>{item.description}</div>
+          </div>
+        ))}
+      </main>
     </div>
   );
 }
