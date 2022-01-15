@@ -30,7 +30,7 @@ function App() {
           type="text"
           autoComplete="off"
           placeholder="Search here..."
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value.trim())}
         />
       </header>
       <main>
