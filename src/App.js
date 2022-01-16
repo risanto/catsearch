@@ -7,18 +7,18 @@ function App() {
   const [searchResult, setSearchResult] = useState();
 
   useEffect(() => {
-    const delayDebounceFn = setTimeout(async () => {
-      try {
-        if (searchTerm.length >= 3) {
+    if (searchTerm.length >= 3) {
+      const delayDebounceFn = setTimeout(async () => {
+        try {
           const result = await catApiService.findCatBreed(searchTerm);
           setSearchResult(result);
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
-      }
-    }, 1000);
+      }, 1000);
 
-    return () => clearTimeout(delayDebounceFn);
+      return () => clearTimeout(delayDebounceFn);
+    }
   }, [searchTerm]);
 
   return (
