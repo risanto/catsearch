@@ -72,9 +72,10 @@ function App() {
       </header>
       <main>
         {searchResult?.map((item) => (
-          <div key={item.id} data-testid="cats">
+          <div key={item.id} data-testid="cat">
             {item.reference_image_id ? (
               <img
+                data-testid="cat-img"
                 src={`https://cdn2.thecatapi.com/images/${item.reference_image_id}.jpg`}
                 alt={item.name}
                 height={300}
