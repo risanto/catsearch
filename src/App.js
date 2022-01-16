@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import * as catApiService from "./services/catApi.service";
+import sortResult from "./utils/sortResult";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,17 +26,10 @@ function App() {
   }, [searchTerm]);
 
   useEffect(() => {
-    const sortResult = () => {
-      const sorted = searchResult.sort((a, b) => {
-        if (sortOrder === "asc") {
-          return a[sortBy] > b[sortBy] ? 1 : -1;
-        } else {
-          return a[sortBy] < b[sortBy] ? 1 : -1;
-        }
-      });
+    if (sortBy && searchResult) {
+      const sorted = sortResult(searchResult, sortBy, sortOrder);
       setSearchResult([...sorted]);
-    };
-    if (sortBy && searchResult) sortResult();
+    }
     // eslint-disable-next-line
   }, [sortBy, sortOrder]);
 
@@ -61,7 +55,7 @@ function App() {
             >
               <option value="name">Name</option>
               <option value="weight">Weight</option>
-              <option value="lifespan">Lifespan</option>
+              <option value="life_span">Lifespan</option>
             </select>
             <label htmlFor="sort">Order:</label>
             <select
@@ -89,9 +83,15 @@ function App() {
               <img src={`cat.ico`} alt={item.name} height={300}></img>
             )}
             <div>Name: {item.name}</div>
-            {item.weight && <div>Weight: {item.weight.metric} kg</div>}
-            {item.life_span && <div>Lifespan: {item.life_span} years</div>}
-            {item.description && <div>{item.description}</div>}
+            <div>
+              Weight:{" "}
+              {item.weight ? `${item.weight.metric} kg` : "No information"}
+            </div>
+            <div>
+              Lifespan:{" "}
+              {item.life_span ? `${item.life_span} years` : "No information"}
+            </div>
+            <div>{item.description ? item.description : "No description"}</div>
           </div>
         ))}
       </main>
