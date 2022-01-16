@@ -38,3 +38,33 @@ test("should return results 1 second after user stops typing", async () => {
 
   expect(screen.queryByTestId("cats")).not.toBeNull();
 });
+
+test("should not return results when user types less than 3 characters", async () => {
+  jest.useFakeTimers();
+  render(<App />);
+
+  const input = screen.getByPlaceholderText("Search here...");
+  userEvent.type(input, "mu");
+
+  await act(async () => {
+    jest.advanceTimersByTime(1000);
+  });
+  await waitFor(() => screen.queryByTestId("cats"));
+
+  expect(screen.queryByTestId("cats")).toBeNull();
+});
+
+test("white spaces should not count into 3 characters", async () => {
+  jest.useFakeTimers();
+  render(<App />);
+
+  const input = screen.getByPlaceholderText("Search here...");
+  userEvent.type(input, " mu");
+
+  await act(async () => {
+    jest.advanceTimersByTime(1000);
+  });
+  await waitFor(() => screen.queryByTestId("cats"));
+
+  expect(screen.queryByTestId("cats")).toBeNull();
+});
