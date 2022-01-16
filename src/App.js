@@ -23,6 +23,9 @@ function App() {
 
       return () => clearTimeout(delayDebounceFn);
     }
+    if (searchTerm.length === 0) {
+      setSearchResult(null);
+    }
   }, [searchTerm]);
 
   useEffect(() => {
@@ -36,7 +39,8 @@ function App() {
   return (
     <div className="App">
       <header>
-        <p>Cat breeds search</p>
+        <img id="cat-icon" src={`cat.ico`} alt={"cat icon"} height={100}></img>
+        <h1>Search cat breeds</h1>
         <input
           autoFocus
           type="text"
@@ -44,9 +48,11 @@ function App() {
           placeholder="Search here..."
           onChange={(e) => setSearchTerm(e.target.value.trim())}
         />
-        {searchResult && (
-          <div>
-            <label htmlFor="sort">Sort by:</label>
+        {!!searchResult?.length && (
+          <div className="sort-order">
+            <label id="sort-label" htmlFor="sort">
+              Sort by:
+            </label>
             <select
               name="sort"
               id="sort"
@@ -57,10 +63,12 @@ function App() {
               <option value="weight">Weight</option>
               <option value="life_span">Lifespan</option>
             </select>
-            <label htmlFor="sort">Order:</label>
+            <label id="order-label" htmlFor="order">
+              Order:
+            </label>
             <select
-              name="sort"
-              id="sort"
+              name="order"
+              id="order"
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
             >
@@ -71,8 +79,14 @@ function App() {
         )}
       </header>
       <main>
+        {searchResult &&
+          (searchResult.length ? (
+            <h2>Displaying {searchResult.length} result(s)</h2>
+          ) : (
+            <h2>Can't find anything :(</h2>
+          ))}
         {searchResult?.map((item) => (
-          <div key={item.id} data-testid="cat">
+          <div className="cat-card" key={item.id} data-testid="cat">
             {item.reference_image_id ? (
               <img
                 data-testid="cat-img"
@@ -83,16 +97,26 @@ function App() {
             ) : (
               <img src={`cat.ico`} alt={item.name} height={300}></img>
             )}
-            <div>Name: {item.name}</div>
+            <div className="name">
+              Name: <span>{item.name}</span>
+            </div>
             <div>
               Weight:{" "}
-              {item.weight ? `${item.weight.metric} kg` : "No information"}
+              {item.weight ? (
+                <span>{item.weight.metric} kg</span>
+              ) : (
+                "No information"
+              )}
             </div>
             <div>
               Lifespan:{" "}
-              {item.life_span ? `${item.life_span} years` : "No information"}
+              {item.life_span ? (
+                <span>{item.life_span} years</span>
+              ) : (
+                "No information"
+              )}
             </div>
-            <div>{item.description ? item.description : "No description"}</div>
+            <p className="desc">{item.description ?? item.description}</p>
           </div>
         ))}
       </main>
