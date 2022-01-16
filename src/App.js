@@ -4,7 +4,10 @@ import * as catApiService from "./services/catApi.service";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResult, setSearchResult] = useState();
+  const [searchResult, setSearchResult] = useState(null);
+
+  const [sortBy, setSortBy] = useState("name");
+  const [sortOrder, setSortOrder] = useState("asc");
 
   useEffect(() => {
     if (searchTerm.length >= 3) {
@@ -21,6 +24,21 @@ function App() {
     }
   }, [searchTerm]);
 
+  useEffect(() => {
+    const sortResult = () => {
+      const sorted = searchResult.sort((a, b) => {
+        if (sortOrder === "asc") {
+          return a[sortBy] > b[sortBy] ? 1 : -1;
+        } else {
+          return a[sortBy] < b[sortBy] ? 1 : -1;
+        }
+      });
+      setSearchResult([...sorted]);
+    };
+    if (sortBy && searchResult) sortResult();
+    // eslint-disable-next-line
+  }, [sortBy, sortOrder]);
+
   return (
     <div className="App">
       <header>
@@ -32,6 +50,31 @@ function App() {
           placeholder="Search here..."
           onChange={(e) => setSearchTerm(e.target.value.trim())}
         />
+        {searchResult && (
+          <div>
+            <label htmlFor="sort">Sort by:</label>
+            <select
+              name="sort"
+              id="sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="name">Name</option>
+              <option value="weight">Weight</option>
+              <option value="lifespan">Lifespan</option>
+            </select>
+            <label htmlFor="sort">Order:</label>
+            <select
+              name="sort"
+              id="sort"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
+        )}
       </header>
       <main>
         {searchResult?.map((item) => (
